@@ -1,0 +1,2 @@
+# main hash table 
+storage = {}
