@@ -14,11 +14,12 @@ def parse_command(command):
 
 def command_result(ins, params):
     ins = ins.upper()
+    cmd = ""
     if ins in ("GET", "SET"):
         cmd = StringCommand(ins, params)
-    elif ins in ("LLEN", "RPUSH", "LPOP", "RPOP"):
+    elif ins in ("LLEN", "RPUSH", "LPOP", "RPOP", "LRANGE"):
         cmd = ListCommand(ins, params)
     else:
-        print "Not found command"
-
+        return "Not found command"
+            
     if cmd: return cmd.run()

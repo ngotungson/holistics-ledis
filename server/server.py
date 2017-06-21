@@ -1,6 +1,7 @@
 import sys
 import socket
 from thread import *
+import traceback
 
 from storage import *
 import cmd_handler
@@ -28,7 +29,7 @@ class LedisServer(object):
                 result += str(cmd_handler.run(command)) + "\n"
                 connect.sendall(result)
             except Exception as e:
-                print e
+                print(traceback.format_exc())
                 connect.sendall("Error: " + e.message + "\n")
             finally:
                 print storage
