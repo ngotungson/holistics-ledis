@@ -1,6 +1,6 @@
 import sys
 from storage import *
-from cmd_lib import StringCommand, ListCommand
+from cmd_lib import StringCommand, ListCommand, SetCommand
 
 def run(command):
     ins, params = parse_command(command)
@@ -19,7 +19,9 @@ def command_result(ins, params):
         cmd = StringCommand(ins, params)
     elif ins in ("LLEN", "RPUSH", "LPOP", "RPOP", "LRANGE"):
         cmd = ListCommand(ins, params)
+    elif ins in ("SADD", "SCARD", "SMEMBERS", "SREM", "SINTER"):
+        cmd = SetCommand(ins, params)
     else:
         return "Not found command"
-            
+
     if cmd: return cmd.run()
