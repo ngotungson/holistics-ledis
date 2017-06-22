@@ -25,8 +25,7 @@ class LedisServer(object):
                 if not command:
                     connect.sendall("No command")
                     break
-                result = "OK\n"
-                result += str(cmd_handler.run(command)) + "\n"
+                result = str(cmd_handler.run(command)) + "\n"
                 connect.sendall(result)
             except Exception as e:
                 print(traceback.format_exc())

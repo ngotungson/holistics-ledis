@@ -1,6 +1,6 @@
 import sys
 from storage import *
-from cmd_lib import StringCommand, ListCommand, SetCommand
+from cmd_lib import StringCommand, ListCommand, SetCommand, ExpirationCommand
 
 def run(command):
     ins, params = parse_command(command)
@@ -21,6 +21,8 @@ def command_result(ins, params):
         cmd = ListCommand(ins, params)
     elif ins in ("SADD", "SCARD", "SMEMBERS", "SREM", "SINTER"):
         cmd = SetCommand(ins, params)
+    elif ins in ("KEYS", "DEL", "FLUSHDB", "EXPIRE", "TTL"):
+        cmd = ExpirationCommand(ins, params)
     else:
         return "Not found command"
 

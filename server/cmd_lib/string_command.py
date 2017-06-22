@@ -14,12 +14,18 @@ class StringCommand(object):
             new_value = self.params[1]
             return self._set(key, new_value)
 
-    def _get_key(self):
-        return self.params[0]
-
     def _set(self, key, value):
-        storage[key] = value
-        return ""
+        if key not in storage: initialize_key(key)
+        storage[key]["value"] = value
+        return "OK"
 
     def _get(self, key):
-        return storage[key]
+        try:
+            return storage[key]["value"]
+        except Exception:
+            raise Exception("Key not found")
+
+    def _get_key(self):
+        key = self.params[0]
+        if key in storage: check_expiration(key)
+        return key

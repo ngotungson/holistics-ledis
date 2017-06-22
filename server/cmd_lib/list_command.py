@@ -21,14 +21,6 @@ class ListCommand(object):
             start, stop = self.params[1], self.params[2]
             return self._lrange(key, start, stop)
 
-    def _get_key(self):
-        return self.params[0]
-
-    def _get_value(self, key):
-        value = storage[key] if key in storage else []
-        if type(value) is not list:
-            raise Exception("Operation against a key holding the wrong kind of value")
-        return value
 
     def _llen(self, key):
         value = self._get_value(key)
@@ -37,7 +29,8 @@ class ListCommand(object):
     def _rpush(self, key, new_values):
         value = self._get_value(key)
         value.extend(new_values)
-        storage[key] = value
+        if key not in storage: initialize_key(key)
+        storage[key]["value"] = value
         return len(value)
 
     def _lpop(self, key):
@@ -45,7 +38,7 @@ class ListCommand(object):
         if len(value) > 0:
             first_elm = value[0]
             del value[0]
-            storage[key] = value
+            storage[key]["value"] = value
             return first_elm
         else:
             return "nil"
@@ -55,7 +48,7 @@ class ListCommand(object):
         if len(value) > 0:
             last_elm = value[-1]
             del value[-1]
-            storage[key] = value
+            storage[key]["value"] = value
             return last_elm
         else:
             return "nil"
@@ -68,3 +61,19 @@ class ListCommand(object):
         else:
             start, stop = start, stop + 1 # Get stop index
         return value[start:stop]
+
+    def _get_key(self):
+        key = self.params[0]
+        if key in storage: check_expiration(key)
+        return key
+
+
+    def _get_value(self, key):
+        if key in storage:
+            check_expiration(key)
+            value = storage[key]["value"]
+            if type(value) is not list:
+                raise Exception("Operation against a key holding the wrong kind of value")
+        else:
+            value = list()
+        return value
