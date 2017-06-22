@@ -21,8 +21,10 @@ class StringCommand(BaseCommand):
         return "OK"
 
     def _get(self, key):
-        try:
+        if key in storage:
             value = storage[key]["value"]
-        except Exception:
+            if type(value) is not str:
+                raise Exception("Operation against a key holding the wrong kind of value")
+        else:
             raise Exception("Key not found")
         return value

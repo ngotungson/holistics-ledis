@@ -47,7 +47,7 @@ class LedisServer(object):
             except Exception as e:
                 error = "Error: " + e.message + "\n"
                 connect.sendall(error)
-                # print(traceback.format_exc())
+                print(traceback.format_exc())
             finally:
                 prompt = str(address[0]) + ":" + str(address[1]) + "> "
                 connect.sendall(prompt)
