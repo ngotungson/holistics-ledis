@@ -17,4 +17,3 @@ def auto_expiration():
         else:
             keys = storage.keys()
             c_keys, n_key_expired = [], 0
-    print storage

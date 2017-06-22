@@ -16,7 +16,7 @@ def time_to_live(key):
     expiration = storage[key]["expiration"]
     timeout, created_at = expiration["timeout"], expiration["created_at"]
     ttl = int(timeout) - (datetime.now() - storage[key]["expiration"]["created_at"]).seconds
-    return ttl if ttl >0 else -1
+    return ttl if ttl >= 0 else -1
 
 def check_expiration(key):
     if storage[key].has_key("expiration"):

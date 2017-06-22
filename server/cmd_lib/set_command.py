@@ -1,27 +1,31 @@
 from storage import *
+from base_command import BaseCommand
 
-class SetCommand(object):
-    def __init__(self, ins, params):
-        self.ins = ins
-        self.params = params
+class SetCommand(BaseCommand):
+    def __init__(self, ins, params=[]):
+        BaseCommand.__init__(self, ins, params)
 
     def run(self):
-        key = self._get_key()
-
         if self.ins == "SADD":
-            new_values = set(self.params[1:])
+            key, new_values = self._get_key(), set(self.params[1:])
             return self._sadd(key, new_values)
+
         elif self.ins == "SCARD":
-            new_values = self.params[1:]
+            key, new_values = self._get_key(), self.params[1:]
             return self._scard(key)
+
         elif self.ins == "SMEMBERS":
+            key = self._get_key()
             return self._smembers(key)
+
         elif self.ins == "SREM":
-            delete_values = self.params[1:]
+            key, delete_values = self._get_key(), self.params[1:]
             return self._srem(key, delete_values)
+
         elif self.ins == "SINTER":
             key_list = self.params[0:]
             return self._sinter(key_list)
+
 
     def _sadd(self, key, new_values):
         value = self._get_value(key)
@@ -58,11 +62,6 @@ class SetCommand(object):
     def _sinter(self, key_list):
         inter_reducer = lambda x, y: x.intersection(y)
         return reduce(inter_reducer, map(self._get_value, key_list))
-
-    def _get_key(self):
-        key = self.params[0]
-        if key in storage: check_expiration(key)
-        return key
 
     def _get_value(self, key):
         if key in storage:

@@ -1,24 +1,29 @@
 from storage import *
+from base_command import BaseCommand
 
-class ListCommand(object):
-    def __init__(self, ins, params):
-        self.ins = ins
-        self.params = params
+class ListCommand(BaseCommand):
+    def __init__(self, ins, params=[]):
+        BaseCommand.__init__(self, ins, params)
 
     def run(self):
-        key = self._get_key()
-
         if self.ins == "LLEN":
+            key = self._get_key()
             return self._llen(key)
+
         elif self.ins == "RPUSH":
-            new_values = self.params[1:]
+            key, new_values = self._get_key(), self.params[1:]
             return self._rpush(key, new_values)
+
         elif self.ins == "LPOP":
+            key = self._get_key()
             return self._lpop(key)
+
         elif self.ins == "RPOP":
+            key = self._get_key()
             return self._rpop(key)
+
         elif self.ins == "LRANGE":
-            start, stop = self.params[1], self.params[2]
+            key, start, stop = self._get_key(), self.params[1], self.params[2]
             return self._lrange(key, start, stop)
 
 
@@ -61,12 +66,6 @@ class ListCommand(object):
         else:
             start, stop = start, stop + 1 # Get stop index
         return value[start:stop]
-
-    def _get_key(self):
-        key = self.params[0]
-        if key in storage: check_expiration(key)
-        return key
-
 
     def _get_value(self, key):
         if key in storage:

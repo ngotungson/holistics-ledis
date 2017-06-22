@@ -1,24 +1,29 @@
 from storage import *
+from base_command import BaseCommand
 
-class ExpirationCommand(object):
-    def __init__(self, ins, params):
-        self.ins = ins
-        self.params = params
+class ExpirationCommand(BaseCommand):
+    def __init__(self, ins, params=[]):
+        BaseCommand.__init__(self, ins, params)
 
     def run(self):
         if self.ins == "KEYS":
             return self._keys()
+
         elif self.ins == "DEL":
             key = self._get_key()
             return self._del(key)
+
         elif self.ins == "FLUSHDB":
             return self._flushdb()
+
         elif self.ins == "EXPIRE":
             key, timeout = self._get_key(), self.params[1]
             return self._expire(key, timeout)
+
         elif self.ins == "TTL":
             key = self._get_key()
             return self._ttl(key)
+
 
     def _keys(self):
         for key in storage.keys():
@@ -51,8 +56,3 @@ class ExpirationCommand(object):
                 return "Timeout not found"
         else:
             raise Exception("Key not found")
-
-    def _get_key(self):
-        key = self.params[0]
-        if key in storage: check_expiration(key)
-        return key

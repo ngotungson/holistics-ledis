@@ -3,17 +3,19 @@ from datetime import datetime
 import glob, pickle
 
 from storage import *
+from base_command import BaseCommand
 
-class SnapshotCommand(object):
+class SnapshotCommand(BaseCommand):
     def __init__(self, ins, params=[]):
-        self.ins = ins
-        self.params = params
+        BaseCommand.__init__(self, ins, params)
 
     def run(self):
         if self.ins == "SAVE":
             return self._save()
+
         elif self.ins == "RESTORE":
             return self._restore()
+
 
     def _save(self):
         new_snapshot = "snapshots/" + str(datetime.now()) + ".backup"

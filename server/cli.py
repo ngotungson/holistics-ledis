@@ -15,7 +15,6 @@ def parse_command(command):
 
 def command_result(ins, params):
     ins = ins.upper()
-    cmd = ""
     if ins in ("GET", "SET"):
         cmd = StringCommand(ins, params)
     elif ins in ("LLEN", "RPUSH", "LPOP", "RPOP", "LRANGE"):
