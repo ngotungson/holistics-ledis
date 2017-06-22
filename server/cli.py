@@ -45,6 +45,6 @@ def command_result(ins, params):
     elif ins in ("SAVE", "RESTORE"):
         cmd = SnapshotCommand(ins, params)
     else:
-        return "Not found command"
+        return "Command not found"
 
     if cmd: return cmd.run()

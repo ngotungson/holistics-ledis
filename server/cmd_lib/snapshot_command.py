@@ -21,9 +21,11 @@ class SnapshotCommand(BaseCommand):
         new_snapshot = "snapshots/" + str(datetime.now()) + ".backup"
         with open(new_snapshot, "wb") as f:
             pickle.dump(storage, f, pickle.HIGHEST_PROTOCOL)
+        return "Saved"
 
     def _restore(self):
         last_snapshot = max(glob.glob('snapshots/*.backup'), key=os.path.getctime)
         with open(last_snapshot, "rb") as f:
             storage.clear()
             storage.update(pickle.load(f))
+        return "Restored"
