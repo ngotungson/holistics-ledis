@@ -7,7 +7,8 @@ import schedule
 
 from storage import *
 import cmd_handler
-from jobs.auto_expiration import *
+from jobs import auto_expiration, auto_snapshot
+
 
 class LedisServer(object):
     def __init__(self):
@@ -22,8 +23,9 @@ class LedisServer(object):
         self.n_requests = n_requests
 
     def run(self):
-        self.socket.listen(self.n_requests)
         self.run_cron_jobs()
+        
+        self.socket.listen(self.n_requests)
         self.handle_commands()
         self.socket.close()
 
@@ -55,6 +57,7 @@ class LedisServer(object):
 
     def _cron_jobs(self):
         schedule.every(1).seconds.do(auto_expiration)
+        schedule.every(1).days.do(auto_snapshot)
         while True:
             schedule.run_pending()
             time.sleep(1)
