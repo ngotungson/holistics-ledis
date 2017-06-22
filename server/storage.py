@@ -22,3 +22,5 @@ def check_expiration(key):
     if storage[key].has_key("expiration"):
         if time_to_live(key) == -1:
             del storage[key]
+            return True
+    return False
